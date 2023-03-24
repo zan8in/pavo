@@ -125,7 +125,7 @@ func (r *Runner) Run() error {
 
 func (r *Runner) initPlatform() (err error) {
 	if !r.config.IsFofa() {
-		return fmt.Errorf("fofa not implemented")
+		return fmt.Errorf("missing fofa email and key")
 	}
 
 	fofaEmail, fofaKey := r.config.Fofa.Email, r.config.Fofa.Key
