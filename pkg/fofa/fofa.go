@@ -74,10 +74,6 @@ func New(options *FofaOptions) (*FofaOptions, error) {
 		return options, fmt.Errorf("fofa requires an email address or Key")
 	}
 
-	options.queryAPI = fmt.Sprintf("https://fofa.info/api/v1/search/all?email=%s&key=%s", options.Email, options.Key)
-
-	options.SetFields([]string{"host", "title", "ip", "port", "domain", "protocol", "server"})
-
 	return options, nil
 }
 
@@ -108,6 +104,8 @@ func (fofa *FofaOptions) Query(qbase64 string) (FofaResultList, error) {
 
 func (fofa *FofaOptions) ReSet() {
 	fofa.queryAPI = fmt.Sprintf("https://fofa.info/api/v1/search/all?email=%s&key=%s", fofa.Email, fofa.Key)
+	fofa.SetFields([]string{"host", "title", "ip", "port", "domain", "protocol", "server"})
+	fofa.SetFull(true)
 }
 
 func (fofa *FofaOptions) SetSize(size int) {
