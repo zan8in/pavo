@@ -86,14 +86,13 @@ func (fofa *FofaOptions) Query(qbase64 string) (FofaResultList, error) {
 		fofaResultList FofaResultList
 		err            error
 	)
+	defer fofa.ReSet()
 
 	if len(qbase64) == 0 {
 		return fofaResultList, fmt.Errorf("qbase64 cannot be empty")
 	}
 
 	fofa.queryAPI = fmt.Sprintf("%s&qbase64=%s", fofa.queryAPI, base64.StdEncoding.EncodeToString([]byte(qbase64)))
-
-	fmt.Println(fofa.queryAPI)
 
 	body, err := retryhttpclient.Get(fofa.queryAPI)
 	if err != nil {
@@ -105,6 +104,10 @@ func (fofa *FofaOptions) Query(qbase64 string) (FofaResultList, error) {
 	}
 
 	return fofaResultList, nil
+}
+
+func (fofa *FofaOptions) ReSet() {
+	fofa.queryAPI = fmt.Sprintf("https://fofa.info/api/v1/search/all?email=%s&key=%s", fofa.Email, fofa.Key)
 }
 
 func (fofa *FofaOptions) SetSize(size int) {

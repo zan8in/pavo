@@ -5,6 +5,7 @@ import "sync"
 type (
 	Result struct {
 		sync.RWMutex
+		query  string
 		result [][]string
 	}
 )
@@ -27,6 +28,20 @@ func (r *Result) HasResult() bool {
 	defer r.RUnlock()
 
 	return len(r.result) > 0
+}
+
+func (r *Result) AddQuery(q string) {
+	r.Lock()
+	defer r.Unlock()
+
+	r.query = q
+}
+
+func (r *Result) GetQuery() string {
+	r.RLock()
+	defer r.RUnlock()
+
+	return r.query
 }
 
 func (r *Result) GetResult() chan []string {

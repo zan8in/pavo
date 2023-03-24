@@ -2,6 +2,7 @@ package pavo
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/remeh/sizedwaitgroup"
@@ -53,6 +54,8 @@ func NewRunner(options *Options) (*Runner, error) {
 func (r *Runner) Run() error {
 	if r.config.IsFofa() && r.options.Platform == FofaPlatform {
 
+		r.Result.AddQuery(strings.Join(r.options.Query, ","))
+
 		for _, q := range r.options.Query {
 			r.wgscan.Add()
 			go func(q string) {
@@ -63,9 +66,10 @@ func (r *Runner) Run() error {
 					page := 1
 					for {
 						n := r.options.Count - page*DefaultQueryCount
-						fmt.Printf("%d - %d = %d..............", r.options.Count, page*DefaultQueryCount, n)
+						// fmt.Printf("%d - %d = %d..............", r.options.Count, page*DefaultQueryCount, n)
 						if n >= 0 {
-							fmt.Printf("page=%d&size=%d\n", page, DefaultQueryCount)
+							// fmt.Printf("page=%d&size=%d\n", page, DefaultQueryCount)
+							r.fofa.ReSet()
 							r.fofa.SetPage(page)
 							r.fofa.SetSize(DefaultQueryCount)
 							results, err := r.fofa.Query(q)
@@ -80,7 +84,8 @@ func (r *Runner) Run() error {
 							if last <= 0 {
 								break
 							}
-							fmt.Printf("page=%d&size=%d\n", page, last)
+							// fmt.Printf("page=%d&size=%d\n", page, last)
+							r.fofa.ReSet()
 							r.fofa.SetPage(page)
 							r.fofa.SetSize(last)
 							results, err := r.fofa.Query(q)
@@ -96,6 +101,8 @@ func (r *Runner) Run() error {
 						time.Sleep(100 * time.Millisecond)
 					}
 				} else {
+					r.fofa.ReSet()
+					r.fofa.SetSize(r.options.Count)
 					results, err := r.fofa.Query(q)
 					if err != nil {
 						gologger.Fatal().Msg(err.Error())

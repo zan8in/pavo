@@ -50,6 +50,9 @@ func WriteOutput(results *result.Result) {
 		file.WriteString("\xEF\xBB\xBF")
 	}
 
+	csvutil.Write([]string{"Query conditions: ", results.GetQuery()})
+	csvutil.Flush()
+
 	for rs := range results.GetResult() {
 		csvutil.Write(rs)
 		csvutil.Flush()

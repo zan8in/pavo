@@ -12,6 +12,7 @@ import (
 )
 
 func main() {
+
 	options, err := pavo.NewOptions(pavo.Options{
 		Query: []string{"server='thinkphp'"},
 	})
