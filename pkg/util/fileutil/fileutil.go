@@ -1,6 +1,9 @@
 package fileutil
 
-import "os"
+import (
+	"os"
+	"path"
+)
 
 // FileExists checks if the file exists in the provided path
 func FileExists(filename string) bool {
@@ -30,4 +33,27 @@ func FolderExists(foldername string) bool {
 func FileOrFolderExists(name string) bool {
 	_, err := os.Stat(name)
 	return !os.IsNotExist(err)
+}
+
+type FileType = uint8
+
+const (
+	FILE_TXT = iota
+	FILE_JSON
+	FILE_CSV
+	NOT_FOUND
+)
+
+func FileExt(filename string) FileType {
+	ext := path.Ext(filename)
+	switch ext {
+	case ".txt":
+		return FILE_TXT
+	case ".json":
+		return FILE_JSON
+	case ".csv":
+		return FILE_CSV
+	default:
+		return NOT_FOUND
+	}
 }

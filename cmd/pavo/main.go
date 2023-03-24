@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/zan8in/gologger"
 	"github.com/zan8in/pavo/pkg/pavo"
@@ -24,7 +25,9 @@ func main() {
 
 	rs := runner.Result.GetResult()
 	for s := range rs {
-		fmt.Println(s)
+		fmt.Println(strings.Join(s, ","))
 	}
+
+	pavo.WriteOutput(runner.Result)
 
 }

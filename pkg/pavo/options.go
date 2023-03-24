@@ -66,5 +66,9 @@ func (options *Options) validateOptions() (err error) {
 		options.Platform = strings.ToLower(options.Platform)
 	}
 
+	if options.Count == 0 {
+		options.Count = DefaultQueryCount
+	}
+
 	return err
 }

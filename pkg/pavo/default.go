@@ -12,5 +12,5 @@ const (
 	FofaPlatform   = "fofa"
 	HunterPlatform = "hunter"
 
-	DefaultQueryCount = 2
+	DefaultQueryCount = 100
 )

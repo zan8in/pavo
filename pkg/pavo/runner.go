@@ -89,12 +89,19 @@ func (r *Runner) Run() error {
 							}
 							if len(results.Results) > 0 {
 								r.Result.AddResult(results.Results)
-								r.options.OnResult(*r.Result)
 							}
 							break
 						}
 						page++
 						time.Sleep(100 * time.Millisecond)
+					}
+				} else {
+					results, err := r.fofa.Query(q)
+					if err != nil {
+						gologger.Fatal().Msg(err.Error())
+					}
+					if len(results.Results) > 0 {
+						r.Result.AddResult(results.Results)
 					}
 				}
 

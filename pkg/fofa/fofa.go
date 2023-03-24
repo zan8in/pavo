@@ -93,6 +93,8 @@ func (fofa *FofaOptions) Query(qbase64 string) (FofaResultList, error) {
 
 	fofa.queryAPI = fmt.Sprintf("%s&qbase64=%s", fofa.queryAPI, base64.StdEncoding.EncodeToString([]byte(qbase64)))
 
+	fmt.Println(fofa.queryAPI)
+
 	body, err := retryhttpclient.Get(fofa.queryAPI)
 	if err != nil {
 		return fofaResultList, err

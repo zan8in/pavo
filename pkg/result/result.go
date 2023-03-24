@@ -29,19 +29,17 @@ func (r *Result) HasResult() bool {
 	return len(r.result) > 0
 }
 
-func (r *Result) GetResult() chan string {
+func (r *Result) GetResult() chan []string {
 	r.Lock()
 
-	out := make(chan string)
+	out := make(chan []string)
 
 	go func() {
 		defer close(out)
 		defer r.Unlock()
 
 		for _, r := range r.result {
-			for _, s := range r {
-				out <- s
-			}
+			out <- r
 		}
 	}()
 
