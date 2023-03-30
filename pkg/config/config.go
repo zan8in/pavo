@@ -4,7 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/zan8in/pavo/pkg/util/fileutil"
+	fileutil "github.com/zan8in/pins/file"
 	"gopkg.in/yaml.v3"
 )
 

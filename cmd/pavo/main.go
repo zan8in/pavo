@@ -5,29 +5,29 @@ import (
 	"strings"
 
 	"github.com/zan8in/gologger"
-	"github.com/zan8in/pavo/pkg/pavo"
+	"github.com/zan8in/pavo/pkg/runner"
 )
 
 func main() {
-	options, err := pavo.ParseOptions()
+	options, err := runner.ParseOptions()
 	if err != nil {
 		gologger.Fatal().Msg(err.Error())
 	}
 
-	runner, err := pavo.NewRunner(options)
+	r, err := runner.NewRunner(options)
 	if err != nil {
 		gologger.Fatal().Msg(err.Error())
 	}
 
-	if err := runner.Run(); err != nil {
+	if err := r.Run(); err != nil {
 		gologger.Fatal().Msg(err.Error())
 	}
 
-	rs := runner.Result.GetResult()
+	rs := r.Result.GetResult()
 	for s := range rs {
 		fmt.Println(strings.Join(s, ","))
 	}
 
-	pavo.WriteOutput(runner.Result)
+	runner.WriteOutput(r.Result)
 
 }

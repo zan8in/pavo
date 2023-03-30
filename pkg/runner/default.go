@@ -1,4 +1,4 @@
-package pavo
+package runner
 
 const (
 	DefaultRetries   = 2

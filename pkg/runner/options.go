@@ -1,4 +1,4 @@
-package pavo
+package runner
 
 import (
 	"errors"
@@ -13,6 +13,8 @@ type OnResultCallback func(result.Result)
 type Options struct {
 	Query    goflags.StringSlice
 	Platform string
+
+	SubDomain string
 
 	Page  int
 	Size  int

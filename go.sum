@@ -1,7 +1,7 @@
 github.com/Mzack9999/go-http-digest-auth-client v0.6.0 h1:LXVNMsj7qiNVmlZByFbjJmXf6SOm/uoo04XmnNcWPms=
 github.com/Mzack9999/go-http-digest-auth-client v0.6.0/go.mod h1:gbwaYYXwA15ZfIxMyY5QU1acATDyNKEuG5TylBCL7AM=
-github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d h1:Byv0BzEl3/e6D5CLfI0j/7hiIEtvGVFPCZ7Ei2oq8iQ=
-github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d/go.mod h1:WaHUgvxTVq04UNunO+XhnAqY/wQc+bxr74GqbsZ/Jqw=
+github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 h1:DklsrG3dyBCFEj5IhUbnKptjxatkF07cF2ak3yi77so=
+github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2/go.mod h1:WaHUgvxTVq04UNunO+XhnAqY/wQc+bxr74GqbsZ/Jqw=
 github.com/aymerick/douceur v0.2.0 h1:Mv+mAeH1Q+n9Fr+oyamOlAkUNPWPlA8PPGR0QAaYuPk=
 github.com/aymerick/douceur v0.2.0/go.mod h1:wlT5vV2O3h55X9m7iVYN0TBM0NH/MmbLnd30/FjWUq4=
 github.com/cnf/structhash v0.0.0-20201127153200-e1b16c1ebc08 h1:ox2F0PSMlrAAiAdknSRMDrAr8mfxPCfSZolH+/qQnyQ=
@@ -9,6 +9,8 @@ github.com/cnf/structhash v0.0.0-20201127153200-e1b16c1ebc08/go.mod h1:pCxVEbcm3
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/go-errors/errors v1.4.2 h1:J6MZopCL4uSllY1OfXM374weqZFFItUbrImctkmUxIA=
+github.com/go-errors/errors v1.4.2/go.mod h1:sIVyrIiJhuEF+Pj9Ebtd6P/rEYROXFi3BopGUQ5a5Og=
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
 github.com/gorilla/css v1.0.0 h1:BQqNyPTi50JCFMTw/b67hByjMVXZRwGha6wxVGkeihY=
 github.com/gorilla/css v1.0.0/go.mod h1:Dn721qIggHpt4+EFCcTLTU/vk5ySda2ReITrtgBl60c=
@@ -40,6 +42,8 @@ github.com/zan8in/goflags v0.0.0-20230204144650-0745934af58a h1:kgpEfiv4FDkAthNB
 github.com/zan8in/goflags v0.0.0-20230204144650-0745934af58a/go.mod h1:SU2BjeuADHecx3khPTkSgkYMvd89YFJnu8YhFDGRIdM=
 github.com/zan8in/gologger v0.0.0-20220917062627-c34a83c0a373 h1:T2YD/hp647jDauupyJqrwMdFSKkLbVeOylYA1ViNrg0=
 github.com/zan8in/gologger v0.0.0-20220917062627-c34a83c0a373/go.mod h1:z3Zn3+DLpcfFKNqhAdYECiFeFK+o1EW3Gh0DEhFZ+v4=
+github.com/zan8in/pins v0.0.0-20230330092440-71855a355758 h1:u9qIMm/yktpK5f2aXj+0NjfQcRr9h+x6wGZp8fnTeAo=
+github.com/zan8in/pins v0.0.0-20230330092440-71855a355758/go.mod h1:IS68BWpdxy0vi8QFQ5tyRrP7WV2LPHVbLT99DHa6o2s=
 github.com/zan8in/retryablehttp v0.0.0-20230317090519-47a043af521d h1:AmJZHaQ2xTb6dXSRdtdmrh5vWN4Sq01wD1liOY8cMdQ=
 github.com/zan8in/retryablehttp v0.0.0-20230317090519-47a043af521d/go.mod h1:UhKj+gugBtAlF14XqmZEfSvvyYVbHqeNckhSMFmqoJw=
 github.com/zan8in/stringsutil v0.0.0-20220917064022-03a0bd835142 h1:VuFo0cT3pSP9TNFq868KdZy3+53so9JOl4mgx+Km5G4=

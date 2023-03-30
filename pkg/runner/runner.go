@@ -1,4 +1,4 @@
-package pavo
+package runner
 
 import (
 	"fmt"

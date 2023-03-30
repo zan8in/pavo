@@ -1,16 +1,40 @@
-package pavo
+package runner
 
 import (
 	"encoding/csv"
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
 	"time"
 
 	"github.com/zan8in/gologger"
 	"github.com/zan8in/pavo/pkg/result"
-	"github.com/zan8in/pavo/pkg/util/fileutil"
+	fileutil "github.com/zan8in/pins/file"
 )
+
+type FileType = uint8
+
+const (
+	FILE_TXT = iota
+	FILE_JSON
+	FILE_CSV
+	NOT_FOUND
+)
+
+func FileExt(filename string) FileType {
+	ext := path.Ext(filename)
+	switch ext {
+	case ".txt":
+		return FILE_TXT
+	case ".json":
+		return FILE_JSON
+	case ".csv":
+		return FILE_CSV
+	default:
+		return NOT_FOUND
+	}
+}
 
 func WriteOutput(results *result.Result) {
 	if !results.HasResult() {
@@ -27,7 +51,7 @@ func WriteOutput(results *result.Result) {
 
 	output = fmt.Sprintf("output-%d.csv", time.Now().UnixMilli())
 
-	fileType = fileutil.FileExt(output)
+	fileType = FileExt(output)
 
 	outputFolder := filepath.Dir(output)
 	if fileutil.FolderExists(outputFolder) {
@@ -45,7 +69,7 @@ func WriteOutput(results *result.Result) {
 	}
 	defer file.Close()
 
-	if fileType == fileutil.FILE_CSV {
+	if fileType == FILE_CSV {
 		csvutil = csv.NewWriter(file)
 		file.WriteString("\xEF\xBB\xBF")
 	}
