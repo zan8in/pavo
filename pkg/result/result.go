@@ -23,6 +23,16 @@ func (r *Result) AddResult(rst [][]string) {
 	r.result = append(r.result, rst...)
 }
 
+func (r *Result) AddResult2(rst []string) {
+	r.Lock()
+	defer r.Unlock()
+
+	r2 := make([][]string, 1)
+	r2[0] = rst
+
+	r.result = r2
+}
+
 func (r *Result) HasResult() bool {
 	r.RLock()
 	defer r.RUnlock()

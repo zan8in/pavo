@@ -14,12 +14,17 @@ var (
 )
 
 type Config struct {
-	Fofa Fofa `yaml:"fofa"`
+	Fofa   Fofa   `yaml:"fofa"`
+	Hunter Hunter `yaml:"hunter"`
 }
 
 type Fofa struct {
 	Email string `yaml:"email"`
 	Key   string `yaml:"key"`
+}
+
+type Hunter struct {
+	ApiKey string `yaml:"api-key"`
 }
 
 func NewConfig() (*Config, error) {
@@ -88,6 +93,13 @@ func readConfig() (*Config, error) {
 
 func (c *Config) IsFofa() bool {
 	if len(c.Fofa.Email) == 0 || len(c.Fofa.Key) == 0 {
+		return false
+	}
+	return true
+}
+
+func (c *Config) IsHunter() bool {
+	if len(c.Hunter.ApiKey) == 0 {
 		return false
 	}
 	return true

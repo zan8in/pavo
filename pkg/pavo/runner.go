@@ -9,6 +9,7 @@ import (
 	"github.com/zan8in/gologger"
 	"github.com/zan8in/pavo/pkg/config"
 	"github.com/zan8in/pavo/pkg/fofa"
+	"github.com/zan8in/pavo/pkg/hunter"
 	"github.com/zan8in/pavo/pkg/result"
 	"github.com/zan8in/pavo/pkg/retryhttpclient"
 )
@@ -18,6 +19,7 @@ type (
 		options *Options
 		config  *config.Config
 		fofa    *fofa.FofaOptions
+		hunter  *hunter.HunterOptions
 		ticker  *time.Ticker
 		wgscan  sizedwaitgroup.SizedWaitGroup
 		Result  *result.Result
@@ -54,9 +56,10 @@ func NewRunner(options *Options) (*Runner, error) {
 func (r *Runner) Run() error {
 	if r.config.IsFofa() && r.options.Platform == FofaPlatform {
 		r.RunFofa()
-	}
-	if r.options.Platform == HunterPlatform {
-		fmt.Println("this is hunter platform")
+	} else if r.config.IsHunter() && r.options.Platform == HunterPlatform {
+		r.RunHunter()
+	} else {
+		return fmt.Errorf("no supported platform (fofa, Hunter)")
 	}
 
 	return nil
@@ -126,16 +129,97 @@ func (r *Runner) RunFofa() {
 	r.wgscan.Wait()
 }
 
-func (r *Runner) initPlatform() (err error) {
-	if !r.config.IsFofa() {
-		return fmt.Errorf("missing fofa email and key")
-	}
+func (r *Runner) RunHunter() {
+	r.Result.AddQuery(strings.Join(r.options.Query, ","))
 
-	fofaEmail, fofaKey := r.config.Fofa.Email, r.config.Fofa.Key
-	if fofa, err := fofa.New(&fofa.FofaOptions{Email: fofaEmail, Key: fofaKey}); err == nil {
-		r.fofa = fofa
-		r.fofa.SetSize(r.options.Count)
-		return nil
+	for _, q := range r.options.Query {
+		r.wgscan.Add()
+		go func(q string) {
+			defer r.wgscan.Done()
+			<-r.ticker.C
+
+			if r.options.Count > DefaultQueryCount {
+				page := 1
+				for {
+					n := r.options.Count - page*DefaultQueryCount
+					// fmt.Printf("%d - %d = %d..............", r.options.Count, page*DefaultQueryCount, n)
+					if n >= 0 {
+						// fmt.Printf("page=%d&size=%d\n", page, DefaultQueryCount)
+						r.hunter.ReSet()
+						r.hunter.SetPage(page)
+						r.hunter.SetSize(DefaultQueryCount)
+						results, err := r.hunter.Query(q)
+						if err != nil {
+							gologger.Fatal().Msg(err.Error())
+						}
+						if results != nil && len(results.Data.Arr) > 0 {
+							r.Result.AddResult(r.hunter.HunterResultList2Slice(results))
+						}
+					} else {
+						last := DefaultQueryCount - (page*DefaultQueryCount - r.options.Count)
+						if last <= 0 {
+							break
+						}
+						// fmt.Printf("page=%d&size=%d\n", page, last)
+						r.hunter.ReSet()
+						r.hunter.SetPage(page)
+						r.hunter.SetSize(last)
+						results, err := r.hunter.Query(q)
+						if err != nil {
+							gologger.Fatal().Msg(err.Error())
+						}
+						if results != nil && len(results.Data.Arr) > 0 {
+							r.Result.AddResult(r.hunter.HunterResultList2Slice(results))
+						}
+						break
+					}
+					page++
+					time.Sleep(100 * time.Millisecond)
+				}
+			} else {
+				r.hunter.ReSet()
+				r.hunter.SetSize(r.options.Count)
+				results, err := r.hunter.Query(q)
+				if err != nil {
+					gologger.Fatal().Msg(err.Error())
+				}
+				if results != nil && len(results.Data.Arr) > 0 {
+					r.Result.AddResult(r.hunter.HunterResultList2Slice(results))
+				}
+			}
+
+		}(q)
+	}
+	r.wgscan.Wait()
+}
+
+func (r *Runner) initPlatform() (err error) {
+
+	if r.options.Platform == HunterPlatform {
+		if !r.config.IsHunter() {
+			return fmt.Errorf("missing hunter api-key")
+		}
+
+		if r.config.IsHunter() {
+			if hunter, err := hunter.New(&hunter.HunterOptions{Key: r.config.Hunter.ApiKey}); err == nil {
+				r.hunter = hunter
+				r.hunter.SetSize(r.options.Count)
+				return nil
+			}
+		}
+	} else {
+		if !r.config.IsFofa() {
+			return fmt.Errorf("missing fofa email and key")
+		}
+
+		if r.config.IsFofa() {
+			fofaEmail, fofaKey := r.config.Fofa.Email, r.config.Fofa.Key
+			if fofa, err := fofa.New(&fofa.FofaOptions{Email: fofaEmail, Key: fofaKey}); err == nil {
+				r.fofa = fofa
+				r.fofa.SetSize(r.options.Count)
+				return nil
+			}
+		}
 	}
 
 	return err
