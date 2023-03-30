@@ -12,7 +12,7 @@ func QuerySubDomain(domain string) ([]string, error) {
 	var result []string
 
 	options, err := runner.NewOptions(runner.Options{
-		Query: []string{`domain="example.com"`},
+		Query: []string{`domain="` + domain + `"`},
 	})
 	if err != nil {
 		return result, err
