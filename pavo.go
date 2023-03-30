@@ -8,11 +8,16 @@ import (
 	urlutil "github.com/zan8in/pins/url"
 )
 
-func QuerySubDomain(domain string) ([]string, error) {
+func QuerySubDomain(domain string, size int) ([]string, error) {
 	var result []string
+
+	if size == 0 {
+		size = 100
+	}
 
 	options, err := runner.NewOptions(runner.Options{
 		Query: []string{`domain="` + domain + `"`},
+		Count: size,
 	})
 	if err != nil {
 		return result, err

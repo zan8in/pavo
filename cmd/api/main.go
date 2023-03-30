@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	r, err := pavo.QuerySubDomain("example.com")
+	r, err := pavo.QuerySubDomain("example.com", 1)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
