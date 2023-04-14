@@ -3,10 +3,17 @@ package pavo
 import (
 	"strings"
 
+	"github.com/zan8in/pavo/pkg/config"
 	"github.com/zan8in/pavo/pkg/runner"
 	sliceutil "github.com/zan8in/pins/slice"
 	urlutil "github.com/zan8in/pins/url"
 )
+
+var cfg *config.Config
+
+func init() {
+	cfg, _ = config.NewConfig()
+}
 
 func QuerySubDomain(domain string, size int) ([]string, error) {
 	var result []string
@@ -94,4 +101,12 @@ func QueryIPPort(ip string, size int) (Results, error) {
 	}
 
 	return result, nil
+}
+
+func IsFofa() bool {
+	return cfg.IsFofa()
+}
+
+func IsHunter() bool {
+	return cfg.IsHunter()
 }
