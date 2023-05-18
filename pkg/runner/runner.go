@@ -86,7 +86,8 @@ func (r *Runner) RunFofa() {
 						r.fofa.SetSize(DefaultQueryCount)
 						results, err := r.fofa.Query(q)
 						if err != nil {
-							gologger.Fatal().Msg(err.Error())
+							gologger.Error().Msg(err.Error())
+							return
 						}
 						if len(results.Results) > 0 {
 							r.Result.AddResult(results.Results)
@@ -102,7 +103,8 @@ func (r *Runner) RunFofa() {
 						r.fofa.SetSize(last)
 						results, err := r.fofa.Query(q)
 						if err != nil {
-							gologger.Fatal().Msg(err.Error())
+							gologger.Error().Msg(err.Error())
+							return
 						}
 						if len(results.Results) > 0 {
 							r.Result.AddResult(results.Results)
@@ -117,7 +119,8 @@ func (r *Runner) RunFofa() {
 				r.fofa.SetSize(r.options.Count)
 				results, err := r.fofa.Query(q)
 				if err != nil {
-					gologger.Fatal().Msg(err.Error())
+					gologger.Error().Msg(err.Error())
+					return
 				}
 				if len(results.Results) > 0 {
 					r.Result.AddResult(results.Results)
@@ -150,7 +153,8 @@ func (r *Runner) RunHunter() {
 						r.hunter.SetSize(DefaultQueryCount)
 						results, err := r.hunter.Query(q)
 						if err != nil {
-							gologger.Fatal().Msg(err.Error())
+							gologger.Error().Msg(err.Error())
+							return
 						}
 						if results != nil && len(results.Data.Arr) > 0 {
 							r.Result.AddResult(r.hunter.HunterResultList2Slice(results))
@@ -166,7 +170,8 @@ func (r *Runner) RunHunter() {
 						r.hunter.SetSize(last)
 						results, err := r.hunter.Query(q)
 						if err != nil {
-							gologger.Fatal().Msg(err.Error())
+							gologger.Error().Msg(err.Error())
+							return
 						}
 						if results != nil && len(results.Data.Arr) > 0 {
 							r.Result.AddResult(r.hunter.HunterResultList2Slice(results))
@@ -181,7 +186,8 @@ func (r *Runner) RunHunter() {
 				r.hunter.SetSize(r.options.Count)
 				results, err := r.hunter.Query(q)
 				if err != nil {
-					gologger.Fatal().Msg(err.Error())
+					gologger.Error().Msg(err.Error())
+					return
 				}
 				if results != nil && len(results.Data.Arr) > 0 {
 					r.Result.AddResult(r.hunter.HunterResultList2Slice(results))
