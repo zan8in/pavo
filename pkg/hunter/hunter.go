@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 
+	"github.com/zan8in/gologger"
 	"github.com/zan8in/pavo/pkg/retryhttpclient"
 )
 
@@ -72,7 +74,7 @@ func (hunter *HunterOptions) Query(query string) (*HunterResultList, error) {
 
 	hunter.queryAPI = fmt.Sprintf("%s&search=%s", hunter.queryAPI, base64.StdEncoding.EncodeToString([]byte(query)))
 
-	// fmt.Println(hunter.queryAPI)
+	gologger.Info().Msgf("%s, page=%d, size=%d\n", query, hunter.page, hunter.size)
 
 	body, err := retryhttpclient.Get(hunter.queryAPI)
 	if err != nil {
@@ -83,6 +85,10 @@ func (hunter *HunterOptions) Query(query string) (*HunterResultList, error) {
 
 	if err = json.Unmarshal(body, &hunterResultList); err != nil {
 		return hunterResultList, err
+	}
+
+	if len(hunterResultList.Data.Arr) == 0 || hunterResultList.Data.Arr == nil {
+		gologger.Error().Msg(hunterResultList.Message)
 	}
 
 	return hunterResultList, nil
@@ -111,14 +117,53 @@ func (hunter *HunterOptions) SetPage(page int) {
 func (hunter *HunterOptions) HunterResultList2Slice(list *HunterResultList) [][]string {
 	if list != nil {
 		if len(list.Data.Arr) > 0 {
-			arr := make([][]string, len(list.Data.Arr))
+			arr := [][]string{}
 
-			for k, d := range list.Data.Arr {
-				arr[k] = append(arr[k], []string{d.Url, d.Ip, strconv.Itoa(d.Port), d.WebTitle, d.Domain, d.Protocol}...)
+			for _, d := range list.Data.Arr {
+				arr = append(arr, []string{d.Url, d.Ip, strconv.Itoa(d.Port), d.WebTitle, d.Domain, d.Protocol})
 			}
 
 			return arr
 		}
 	}
 	return [][]string{}
+}
+
+func (hunter *HunterOptions) GetPoints() int {
+	var (
+		hunterResultList *HunterResultList
+		err              error
+		query            = "domain=\"huiguiju.com\""
+	)
+
+	hunter.ReSet()
+	hunter.SetSize(100)
+
+	hunter.queryAPI = fmt.Sprintf("%s&search=%s", hunter.queryAPI, base64.StdEncoding.EncodeToString([]byte(query)))
+
+	body, err := retryhttpclient.Get(hunter.queryAPI)
+	if err != nil {
+		return 0
+	}
+
+	if err = json.Unmarshal(body, &hunterResultList); err != nil {
+		return 0
+	}
+
+	if hunterResultList.Code == 40204 || strings.Contains(hunterResultList.Message, "您的积分用完了") {
+		return 0
+	}
+
+	rq := strings.ReplaceAll(hunterResultList.Data.RestQuota, "今日剩余积分：", "")
+	r, err := strconv.Atoi(rq)
+	if err != nil {
+		return 0
+	}
+
+	return r
+
+}
+
+func (hunter *HunterOptions) DesensitizationKey(key string) string {
+	return "******" + key[:6]
 }

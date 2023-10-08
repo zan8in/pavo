@@ -141,13 +141,15 @@ func (r *Runner) RunHunter() {
 			defer r.wgscan.Done()
 			<-r.ticker.C
 
+			rlist := []*hunter.HunterResultList{}
+
 			if r.options.Count > DefaultQueryCount {
 				page := 1
 				for {
 					n := r.options.Count - page*DefaultQueryCount
-					// fmt.Printf("%d - %d = %d..............", r.options.Count, page*DefaultQueryCount, n)
+					// fmt.Printf("++++++%d - %d = %d..............", r.options.Count, page*DefaultQueryCount, n)
 					if n >= 0 {
-						// fmt.Printf("page=%d&size=%d\n", page, DefaultQueryCount)
+						// fmt.Printf("++++++page=%d&size=%d\n", page, DefaultQueryCount)
 						r.hunter.ReSet()
 						r.hunter.SetPage(page)
 						r.hunter.SetSize(DefaultQueryCount)
@@ -156,15 +158,18 @@ func (r *Runner) RunHunter() {
 							gologger.Error().Msg(err.Error())
 							return
 						}
-						if results != nil && len(results.Data.Arr) > 0 {
-							r.Result.AddResult(r.hunter.HunterResultList2Slice(results))
+						if results != nil {
+							rlist = append(rlist, results)
 						}
+						// if results != nil && len(results.Data.Arr) > 0 {
+						// 	r.Result.AddResult(r.hunter.HunterResultList2Slice(results))
+						// }
 					} else {
 						last := DefaultQueryCount - (page*DefaultQueryCount - r.options.Count)
 						if last <= 0 {
 							break
 						}
-						// fmt.Printf("page=%d&size=%d\n", page, last)
+						// fmt.Printf("--------page=%d&size=%d\n", page, last)
 						r.hunter.ReSet()
 						r.hunter.SetPage(page)
 						r.hunter.SetSize(last)
@@ -173,25 +178,41 @@ func (r *Runner) RunHunter() {
 							gologger.Error().Msg(err.Error())
 							return
 						}
-						if results != nil && len(results.Data.Arr) > 0 {
-							r.Result.AddResult(r.hunter.HunterResultList2Slice(results))
+						if results != nil {
+							rlist = append(rlist, results)
 						}
+						// if results != nil && len(results.Data.Arr) > 0 {
+						// 	r.Result.AddResult(r.hunter.HunterResultList2Slice(results))
+						// }
 						break
 					}
 					page++
-					time.Sleep(100 * time.Millisecond)
+					time.Sleep(6000 * time.Millisecond)
 				}
 			} else {
 				r.hunter.ReSet()
+				r.hunter.SetPage(1)
 				r.hunter.SetSize(r.options.Count)
 				results, err := r.hunter.Query(q)
 				if err != nil {
 					gologger.Error().Msg(err.Error())
 					return
 				}
-				if results != nil && len(results.Data.Arr) > 0 {
-					r.Result.AddResult(r.hunter.HunterResultList2Slice(results))
+				if results != nil {
+					rlist = append(rlist, results)
 				}
+				// if results != nil && len(results.Data.Arr) > 0 {
+				// 	r.Result.AddResult(r.hunter.HunterResultList2Slice(results))
+				// }
+			}
+
+			if len(rlist) > 0 {
+				count := 0
+				for _, rst := range rlist {
+					count += len(rst.Data.Arr)
+					r.Result.AddResult(r.hunter.HunterResultList2Slice(rst))
+				}
+				// fmt.Println("xxxxxxxxxxxxx:", count)
 			}
 
 		}(q)
@@ -207,11 +228,26 @@ func (r *Runner) initPlatform() (err error) {
 		}
 
 		if r.config.IsHunter() {
-			if hunter, err := hunter.New(&hunter.HunterOptions{Key: r.config.Hunter.ApiKey}); err == nil {
-				r.hunter = hunter
-				r.hunter.SetSize(r.options.Count)
-				return nil
+
+			for _, key := range r.config.Hunter.ApiKey {
+				if hunter, err := hunter.New(&hunter.HunterOptions{Key: key}); err == nil {
+
+					r.hunter = hunter
+					r.hunter.SetSize(r.options.Count)
+
+					count := hunter.GetPoints()
+
+					if count == 0 {
+						gologger.Error().Msgf("大牛，您的 %s 积分用完了，明天再试试", hunter.DesensitizationKey(key))
+						continue
+					}
+
+					gologger.Info().Msgf("正在使用 Key: %s, 剩余积分: %d", hunter.DesensitizationKey(key), count)
+
+					return nil
+				}
 			}
+
 		}
 	} else {
 		if !r.config.IsFofa() {

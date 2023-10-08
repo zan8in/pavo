@@ -24,8 +24,13 @@ type Fofa struct {
 }
 
 type Hunter struct {
-	ApiKey string `yaml:"api-key"`
+	ApiKey []string `yaml:"api-key"`
 }
+
+var (
+	HunterApiKeyList     []string
+	HunterApiKeyNullList []string
+)
 
 func NewConfig() (*Config, error) {
 	var err error
@@ -99,8 +104,30 @@ func (c *Config) IsFofa() bool {
 }
 
 func (c *Config) IsHunter() bool {
-	if len(c.Hunter.ApiKey) == 0 {
-		return false
+	HunterApiKeyList = c.Hunter.ApiKey
+	return len(c.Hunter.ApiKey) != 0
+}
+
+func GetApiKey() string {
+	for _, v := range HunterApiKeyList {
+		if !IsApiKeyNull(v) {
+			return v
+		}
 	}
-	return true
+	return ""
+}
+
+func SetApiKeyNull(apikey string) {
+	if !IsApiKeyNull(apikey) {
+		HunterApiKeyNullList = append(HunterApiKeyNullList, apikey)
+	}
+}
+
+func IsApiKeyNull(apikey string) bool {
+	for _, v := range HunterApiKeyNullList {
+		if v == apikey {
+			return true
+		}
+	}
+	return false
 }
