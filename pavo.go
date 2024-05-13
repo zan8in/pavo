@@ -44,7 +44,7 @@ func Query(q []string, size int) ([]string, error) {
 		result = append(result, s[0])
 	}
 
-	return DedupDomain(result), nil
+	return result, nil
 }
 
 func QuerySubDomain(domain string, size int) ([]string, error) {
