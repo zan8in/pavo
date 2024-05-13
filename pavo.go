@@ -82,7 +82,7 @@ func QuerySubDomain(domain string, size int) ([]string, error) {
 func DedupDomain(s []string) []string {
 	var n []string
 	for _, d := range s {
-		if r, err := urlutil.DomainName(d); err == nil {
+		if r, err := urlutil.Hostname(d); err == nil {
 			n = append(n, strings.TrimSpace(strings.TrimRight(r, ".")))
 		}
 	}

@@ -6,7 +6,7 @@ require (
 	github.com/remeh/sizedwaitgroup v1.0.0
 	github.com/zan8in/goflags v0.0.0-20230204144650-0745934af58a
 	github.com/zan8in/gologger v0.0.0-20220917062627-c34a83c0a373
-	github.com/zan8in/pins v0.0.0-20230330092440-71855a355758
+	github.com/zan8in/pins v0.0.0-20231009082442-920437d7fa86
 	github.com/zan8in/retryablehttp v0.0.0-20230317090519-47a043af521d
 	gopkg.in/yaml.v3 v3.0.1
 )
@@ -27,6 +27,7 @@ require (
 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d // indirect
 	github.com/zan8in/fileutil v0.0.0-20220917063910-ce47dcc0cfa9 // indirect
 	github.com/zan8in/stringsutil v0.0.0-20220917064022-03a0bd835142 // indirect
+	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/net v0.8.0 // indirect
-	golang.org/x/text v0.8.0 // indirect
+	golang.org/x/text v0.9.0 // indirect
 )
