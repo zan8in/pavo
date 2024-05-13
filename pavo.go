@@ -41,7 +41,7 @@ func Query(q []string, size int) ([]string, error) {
 
 	rs := r.Result.GetResult()
 	for s := range rs {
-		result = append(result, s[0])
+		result = append(result, strings.Join(s, ","))
 	}
 
 	return result, nil
