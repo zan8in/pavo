@@ -15,6 +15,38 @@ func init() {
 	cfg, _ = config.NewConfig()
 }
 
+func Query(q []string, size int) ([]string, error) {
+	var result []string
+
+	if size == 0 {
+		size = 100
+	}
+
+	options, err := runner.NewOptions(runner.Options{
+		Query: q,
+		Count: size,
+	})
+	if err != nil {
+		return result, err
+	}
+
+	r, err := runner.NewRunner(options)
+	if err != nil {
+		return result, err
+	}
+
+	if err := r.Run(); err != nil {
+		return result, err
+	}
+
+	rs := r.Result.GetResult()
+	for s := range rs {
+		result = append(result, s[0])
+	}
+
+	return DedupDomain(result), nil
+}
+
 func QuerySubDomain(domain string, size int) ([]string, error) {
 	var result []string
 

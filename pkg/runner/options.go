@@ -37,7 +37,7 @@ func ParseOptions() (*Options, error) {
 	flagSet.SetDescription(`Pavo`)
 
 	flagSet.CreateGroup("input", "Input",
-		flagSet.StringSliceVarP(&options.Query, "query", "q", nil, "query conditions (comma-separated)", goflags.NormalizedStringSliceOptions),
+		flagSet.StringSliceVarP(&options.Query, "query", "q", nil, "query conditions (comma-separated)", goflags.NormalizedOriginalStringSliceOptions),
 		flagSet.StringVarP(&options.Platform, "platform", "p", "fofa", "cyberspace mapping platform, support format: fofa,hunter"),
 	)
 

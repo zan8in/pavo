@@ -112,7 +112,7 @@ func (r *Runner) RunFofa() {
 						break
 					}
 					page++
-					time.Sleep(100 * time.Millisecond)
+					time.Sleep(1000 * time.Millisecond)
 				}
 			} else {
 				r.fofa.ReSet()
@@ -172,7 +172,7 @@ func (r *Runner) RunHunter() {
 						// fmt.Printf("--------page=%d&size=%d\n", page, last)
 						r.hunter.ReSet()
 						r.hunter.SetPage(page)
-						r.hunter.SetSize(last)
+						r.hunter.SetSize(DefaultQueryCount)
 						results, err := r.hunter.Query(q)
 						if err != nil {
 							gologger.Error().Msg(err.Error())
@@ -239,10 +239,12 @@ func (r *Runner) initPlatform() (err error) {
 
 					if count == 0 {
 						gologger.Error().Msgf("大牛，您的 %s 积分用完了，明天再试试", hunter.DesensitizationKey(key))
+						time.Sleep(2 * time.Second)
 						continue
 					}
 
 					gologger.Info().Msgf("正在使用 Key: %s, 剩余积分: %d", hunter.DesensitizationKey(key), count)
+					time.Sleep(2 * time.Second)
 
 					return nil
 				}
