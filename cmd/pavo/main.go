@@ -25,6 +25,7 @@ func main() {
 
 	rs := r.Result.GetResult()
 	for s := range rs {
+		// fmt.Printf("s[0]=%s,s[1]=%s,s[2]=%s,s[3]=%s,s[4]=%s\n", s[0], s[1], s[2], s[3], s[4])
 		fmt.Println(strings.Join(s, ","))
 	}
 

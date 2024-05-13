@@ -105,7 +105,7 @@ func (fofa *FofaOptions) Query(qbase64 string) (FofaResultList, error) {
 func (fofa *FofaOptions) ReSet() {
 	fofa.queryAPI = fmt.Sprintf("https://fofa.info/api/v1/search/all?email=%s&key=%s", fofa.Email, fofa.Key)
 	// fofa.SetFields([]string{"host", "title", "ip", "port", "domain", "protocol", "server"})
-	fofa.SetFields([]string{"host", "title", "ip", "port", "domain", "protocol", "server", "country_name", "region", "city", "os", "icp", "base_protocol", "as_organization"})
+	fofa.SetFields([]string{"host", "title", "ip", "port", "domain", "protocol", "server", "country_name", "region", "city", "os", "icp", "base_protocol"})
 	fofa.SetFull(true)
 }
 
