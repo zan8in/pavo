@@ -91,6 +91,8 @@ func (r *Runner) RunFofa() {
 						}
 						if len(results.Results) > 0 {
 							r.Result.AddResult(results.Results)
+						} else {
+							break
 						}
 					} else {
 						last := DefaultQueryCount - (page*DefaultQueryCount - r.options.Count)
