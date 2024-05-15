@@ -14,6 +14,9 @@ func main() {
 		gologger.Fatal().Msg(err.Error())
 	}
 
+	// options.Query = []string{}
+	// options.Query = append(options.Query, "ip=\"60.10.20.25\" && after=\"2023-03-01\"")
+
 	r, err := runner.NewRunner(options)
 	if err != nil {
 		gologger.Fatal().Msg(err.Error())
